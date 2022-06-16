@@ -120,6 +120,10 @@ mod tests {
         } else {
             panic!("There is no room with this name.")
         }
+        let mut device_list = h.get_device_list_in_room("R2");
+        assert!(device_list.next().map_or(false, |d| d.starts_with("Socket")));
+        assert!(device_list.next().map_or(false, |d| d.starts_with("Thermo")));
+        assert!(device_list.next().is_none());
     }
 
     #[test]
@@ -133,5 +137,8 @@ mod tests {
         assert!(h.remove_device("R1", "Socket2").map_or(false, |device| device.eq("Socket2")));
         assert!(h.remove_device("R1", "no such device").is_none());
         assert!(h.remove_device("No such room", "Irrelevant").is_none());
+        let mut device_list = h.get_device_list_in_room("R1");
+        assert!(device_list.next().map_or(false, |device| device.eq("Socket1")));
+        assert!(device_list.next().is_none());
     }
 }
