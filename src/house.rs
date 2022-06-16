@@ -1,5 +1,5 @@
 #![allow(unused, dead_code)]
-use std::collections::{BTreeMap, btree_map::{Keys}, BTreeSet, btree_set::Iter};
+use std::collections::{btree_map::Keys, btree_set::Iter, BTreeMap, BTreeSet};
 
 type Room = BTreeSet<String>;
 #[derive(Debug)]
@@ -47,19 +47,21 @@ impl House {
 
     pub fn add_device(&mut self, room_name: &str, unique_name: &str) -> HouseResult {
         match self.rooms.get_mut(room_name) {
-            Some(room) => if room.insert(unique_name.into()) {
-                Ok(())
-            } else {
-                Err(HouseError::DeviceNameClash)
+            Some(room) => {
+                if room.insert(unique_name.into()) {
+                    Ok(())
+                } else {
+                    Err(HouseError::DeviceNameClash)
+                }
             }
-            None => Err(HouseError::NoRoomName)
+            None => Err(HouseError::NoRoomName),
         }
     }
 
     pub fn remove_device(&mut self, room_name: &str, device_name: &str) -> bool {
         match self.rooms.get_mut(room_name) {
             Some(room) => room.remove(device_name.into()),
-            None => false
+            None => false,
         }
     }
 
@@ -131,8 +133,12 @@ mod tests {
             panic!("There is no room with this name.")
         }
         let mut device_list = h.get_device_list_in_room("R2").unwrap();
-        assert!(device_list.next().map_or(false, |d| d.starts_with("Socket")));
-        assert!(device_list.next().map_or(false, |d| d.starts_with("Thermo")));
+        assert!(device_list
+            .next()
+            .map_or(false, |d| d.starts_with("Socket")));
+        assert!(device_list
+            .next()
+            .map_or(false, |d| d.starts_with("Thermo")));
         assert!(device_list.next().is_none());
     }
 
@@ -148,7 +154,9 @@ mod tests {
         assert!(!h.remove_device("R1", "no such device"));
         assert!(!h.remove_device("No such room", "Irrelevant"));
         let mut device_list = h.get_device_list_in_room("R1").unwrap();
-        assert!(device_list.next().map_or(false, |device| device.eq("Socket1")));
+        assert!(device_list
+            .next()
+            .map_or(false, |device| device.eq("Socket1")));
         assert!(device_list.next().is_none());
     }
 }
