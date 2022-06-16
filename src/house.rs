@@ -1,4 +1,5 @@
 #![allow(unused, dead_code)]
+use std::fmt;
 use std::collections::{btree_map::Keys, btree_set::Iter, BTreeMap, BTreeSet};
 
 type Room = BTreeSet<String>;
@@ -9,6 +10,7 @@ pub enum HouseError {
     NoRoomName,
     NoDeviceName,
 }
+
 pub type HouseResult = Result<(), HouseError>;
 
 #[derive(Debug, Default)]
@@ -16,11 +18,11 @@ pub struct House {
     rooms: BTreeMap<String, Room>,
 }
 
-trait ReportState {
+pub trait ReportState {
     fn report_state(&self) -> String;
 }
 
-trait GetDevice {
+pub trait GetDevice {
     fn get_device(&self, room: &str, device: &str) -> &dyn ReportState;
 }
 
@@ -67,6 +69,23 @@ impl House {
 
     pub fn get_device_list_in_room(&self, room_name: &str) -> Option<Iter<String>> {
         self.rooms.get(room_name).map(|room| room.iter())
+    }
+}
+
+impl ReportState for House {
+    fn report_state(&self) -> String {
+        todo!()
+    }
+}
+
+impl fmt::Display for HouseError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            HouseError::RoomNameClash => write!(f, "Room Name Clash"),
+            HouseError::DeviceNameClash => write!(f, "Device Name Clash"),
+            HouseError::NoRoomName => write!(f, "No such Room"),
+            HouseError::NoDeviceName => write!(f, "No such Device"),
+        }
     }
 }
 
