@@ -67,4 +67,16 @@ mod tests {
         assert!(h.remove_room("R2").map_or(false, |room| room.is_empty()));
         assert!(h.remove_room("No such room").is_none());
     }
+
+    #[test]
+    fn test_room_list() {
+        let mut h = House::default();
+        assert!(h.get_room_name_list().next().is_none());
+        assert!(h.add_room("R1").is_ok());
+        assert!(h.add_room("R2").is_ok());
+        let mut room_list = h.get_room_name_list();
+        assert!(room_list.next().map_or(false, |room| room.eq("R1")));
+        assert!(room_list.next().map_or(false, |room| room.eq("R2")));
+        assert!(room_list.next().is_none());
+    }
 }
