@@ -46,15 +46,25 @@ impl House {
     }
 
     pub fn add_device(&mut self, room_name: &str, unique_name: &str) -> HouseResult {
-        todo!()
+        match self.rooms.get_mut(room_name) {
+            Some(room) => if room.insert(unique_name.into()) {
+                Ok(())
+            } else {
+                Err(HouseError::DeviceNameClash)
+            }
+            None => Err(HouseError::NoRoomName)
+        }
     }
 
-    pub fn remove_device(&mut self, room_name: &str, device_name: &str) -> Option<String> {
-        todo!()
+    pub fn remove_device(&mut self, room_name: &str, device_name: &str) -> bool {
+        match self.rooms.get_mut(room_name) {
+            Some(room) => room.remove(device_name.into()),
+            None => false
+        }
     }
 
-    pub fn get_device_list_in_room(&self, room_name: &str) -> Iter<String> {
-        todo!()
+    pub fn get_device_list_in_room(&self, room_name: &str) -> Option<Iter<String>> {
+        self.rooms.get(room_name).map(|room| room.iter())
     }
 }
 
@@ -120,7 +130,7 @@ mod tests {
         } else {
             panic!("There is no room with this name.")
         }
-        let mut device_list = h.get_device_list_in_room("R2");
+        let mut device_list = h.get_device_list_in_room("R2").unwrap();
         assert!(device_list.next().map_or(false, |d| d.starts_with("Socket")));
         assert!(device_list.next().map_or(false, |d| d.starts_with("Thermo")));
         assert!(device_list.next().is_none());
@@ -134,10 +144,10 @@ mod tests {
         assert!(h.add_device("R1", "Socket1").is_ok());
         assert!(h.add_device("R1", "Socket2").is_ok());
         assert!(h.add_device("R2", "Thermo").is_ok());
-        assert!(h.remove_device("R1", "Socket2").map_or(false, |device| device.eq("Socket2")));
-        assert!(h.remove_device("R1", "no such device").is_none());
-        assert!(h.remove_device("No such room", "Irrelevant").is_none());
-        let mut device_list = h.get_device_list_in_room("R1");
+        assert!(h.remove_device("R1", "Socket2"));
+        assert!(!h.remove_device("R1", "no such device"));
+        assert!(!h.remove_device("No such room", "Irrelevant"));
+        let mut device_list = h.get_device_list_in_room("R1").unwrap();
         assert!(device_list.next().map_or(false, |device| device.eq("Socket1")));
         assert!(device_list.next().is_none());
     }
