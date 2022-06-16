@@ -1,7 +1,7 @@
 #![allow(unused, dead_code)]
-use std::collections::{BTreeMap, btree_map::Keys};
+use std::collections::{BTreeMap, btree_map::Keys, BTreeSet};
 
-type Room = BTreeMap<String, String>;
+type Room = BTreeSet<String>;
 #[derive(Debug)]
 pub enum HouseError {
     RoomNameClash,
@@ -34,14 +34,37 @@ impl House {
     }
 
     pub fn get_room(&self, room_name: &str) -> Option<&Room> {
-        todo!()
+        self.rooms.get(room_name)
     }
 
     pub fn remove_room(&mut self, room_name: &str) -> Option<Room> {
-        todo!()
+        self.rooms.remove(room_name)
     }
 
     pub fn get_room_name_list(&self) -> Keys<String, Room> {
-        todo!()
+        self.rooms.keys()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_get_room() {
+        let mut h = House::default();
+        assert!(h.add_room("R1").is_ok());
+        assert!(h.add_room("R2").is_ok());
+        assert!(h.add_room("R2").map_or(true, |_| false));
+        assert!(h.get_room("R1").map_or(false, |room| room.is_empty()));
+        assert!(h.get_room("No such room").is_none());
+    }
+
+    #[test]
+    fn test_remove_room() {
+        let mut h = House::default();
+        assert!(h.add_room("R1").is_ok());
+        assert!(h.add_room("R2").is_ok());
+        assert!(h.remove_room("R2").map_or(false, |room| room.is_empty()));
+        assert!(h.remove_room("No such room").is_none());
     }
 }

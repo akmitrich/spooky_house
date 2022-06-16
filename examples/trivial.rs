@@ -12,5 +12,8 @@ fn main() {
     if let Err(e) = h.add_room("R2") {
         println!("As expected {:?}", e);
     }
-    println!("{:?}", h);
+    println!("Start with house: {:?}", h);
+    let room_list_iter = h.get_room_name_list();
+    println!("List of rooms in the house: {:?}", room_list_iter.collect::<Vec<_>>());
+    println!("House still is {:?}", h);
 }
