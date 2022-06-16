@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    fn test_device() {
+    fn test_add_device() {
         let mut h = House::default();
         assert!(h.add_room("R1").is_ok());
         assert!(h.add_room("R2").is_ok());
@@ -120,5 +120,18 @@ mod tests {
         } else {
             panic!("There is no room with this name.")
         }
+    }
+
+    #[test]
+    fn test_remove_device() {
+        let mut h = House::default();
+        assert!(h.add_room("R1").is_ok());
+        assert!(h.add_room("R2").is_ok());
+        assert!(h.add_device("R1", "Socket1").is_ok());
+        assert!(h.add_device("R1", "Socket2").is_ok());
+        assert!(h.add_device("R2", "Thermo").is_ok());
+        assert!(h.remove_device("R1", "Socket2").map_or(false, |device| device.eq("Socket2")));
+        assert!(h.remove_device("R1", "no such device").is_none());
+        assert!(h.remove_device("No such room", "Irrelevant").is_none());
     }
 }
