@@ -12,7 +12,9 @@ fn main() {
     spooky.add_socket("R1", "Socket1", devices::Socket::new(220_f64, 0_f64, false));
     house.add_device("R1", "Thermo").unwrap();
     spooky.add_thermometer("R1", "Thermo", devices::Thermometer::new(23.3));
+    house.add_device("Kitchen", "Thermo").unwrap();
+    spooky.add_thermometer("Kitchen", "Thermo", devices::Thermometer::new(120_f64));
     println!("{:?}", spooky);
     println!("Report:");
-    println!("{}", house.report_state());
+    println!("{}", house.generate_report(&spooky));
 }

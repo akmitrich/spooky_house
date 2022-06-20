@@ -70,11 +70,14 @@ impl House {
     pub fn get_device_list_in_room(&self, room_name: &str) -> Option<Iter<String>> {
         self.rooms.get(room_name).map(|room| room.iter())
     }
-}
 
-impl ReportState for House {
-    fn report_state(&self) -> String {
-        todo!()
+    pub fn generate_report(&self, info_provider: &impl GetDevice) -> String {
+        for room in self.get_room_name_list() {
+            for device in self.get_device_list_in_room(room).unwrap() {
+                println!("{}-{} -> {}", room, device, info_provider.get_device(room, device).unwrap().report_state());
+            }
+        }
+        "".into()
     }
 }
 
