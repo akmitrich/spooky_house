@@ -23,7 +23,7 @@ pub trait ReportState {
 }
 
 pub trait GetDevice {
-    fn get_device(&self, room: &str, device: &str) -> &dyn ReportState;
+    fn get_device(&self, room: &str, device: &str) -> Option<&dyn ReportState>;
 }
 
 impl House {

@@ -18,8 +18,8 @@ fn main() {
         "List of rooms in the house: {:?}",
         room_list_iter.collect::<Vec<_>>()
     );
-    h.add_device("Kitchen", "Kettle");
-    h.add_device("Kitchen", "Fridge");
-    h.add_device("Kitchen", "Toaster");
+    h.add_device("Kitchen", "Kettle").unwrap();
+    h.add_device("Kitchen", "Fridge").unwrap();
+    h.add_device("Kitchen", "Toaster").unwrap();
     println!("We end up with house: {:?}", h);
 }

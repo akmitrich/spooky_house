@@ -26,11 +26,11 @@ impl ReportState for Thermometer {
 }
 
 impl Socket {
-    pub fn new(voltage: f64, current: f64) -> Self {
+    pub fn new(voltage: f64, current: f64, on: bool) -> Self {
         Self {
             voltage,
             current,
-            on: false,
+            on,
         }
     }
 
