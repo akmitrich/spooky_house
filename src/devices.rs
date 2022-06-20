@@ -15,13 +15,13 @@ pub struct Thermometer {
 
 impl ReportState for Socket {
     fn report_state(&self) -> String {
-        todo!()
+        format!("Socket [V = {}, I = {}] is {}", self.voltage, self.current, if self.on {"On"} else {"Off"})
     }
 }
 
 impl ReportState for Thermometer {
     fn report_state(&self) -> String {
-        todo!()
+        format!("Thermometer [t = {}]", self.temperature)
     }
 }
 

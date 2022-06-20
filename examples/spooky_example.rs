@@ -1,3 +1,4 @@
+use spooky_house::house::ReportState;
 use spooky_house::spooky;
 use spooky_house::house;
 use spooky_house::devices;
@@ -11,5 +12,7 @@ fn main() {
     spooky.add_socket("R1", "Socket1", devices::Socket::new(220_f64, 0_f64, false));
     house.add_device("R1", "Thermo").unwrap();
     spooky.add_thermometer("R1", "Thermo", devices::Thermometer::new(23.3));
-    println!("{:?} {:?}", spooky, house);
+    println!("{:?}", spooky);
+    println!("Report:");
+    println!("{}", house.report_state());
 }
