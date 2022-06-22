@@ -1,6 +1,6 @@
-use spooky_house::spooky;
-use spooky_house::house;
 use spooky_house::devices;
+use spooky_house::house;
+use spooky_house::spooky;
 
 fn main() {
     let mut spooky = spooky::Spooky::default();

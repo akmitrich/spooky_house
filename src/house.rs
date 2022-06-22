@@ -1,6 +1,6 @@
 #![allow(unused, dead_code)]
-use std::fmt;
 use std::collections::{btree_map::Keys, btree_set::Iter, BTreeMap, BTreeSet};
+use std::fmt;
 
 type Room = BTreeSet<String>;
 #[derive(Debug)]
@@ -62,7 +62,7 @@ impl House {
 
     pub fn remove_device(&mut self, room_name: &str, device_name: &str) -> bool {
         match self.rooms.get_mut(room_name) {
-            Some(room) => room.remove(device_name.into()),
+            Some(room) => room.remove(device_name),
             None => false,
         }
     }
@@ -72,15 +72,19 @@ impl House {
     }
 
     pub fn generate_report(&self, info_provider: &impl GetDevice) -> String {
-        let mut lines = vec![];
-        lines.push(String::from("General report on House:"));
+        let mut lines = vec![String::from("General report on House:")];
         for room in self.get_room_name_list() {
             lines.push(format!("\t Room: {}", room));
             for device in self.get_device_list_in_room(room).unwrap() {
                 match info_provider.get_device(room, device) {
-                    Some(report_state) => 
-                        lines.push(format!("\t\t {} => {}", device, report_state.report_state())),
-                    None => lines.push(format!("Error! Cannot find info about {}-{}", room, device)),
+                    Some(report_state) => lines.push(format!(
+                        "\t\t {} => {}",
+                        device,
+                        report_state.report_state()
+                    )),
+                    None => {
+                        lines.push(format!("Error! Cannot find info about {}-{}", room, device))
+                    }
                 }
             }
         }
@@ -145,7 +149,6 @@ mod tests {
         let result = h.add_device("R1", "Socket2");
         if let Err(e) = result {
             if let HouseError::DeviceNameClash = e {
-                assert!(true);
             } else {
                 panic!("Error should be DeviceClashError.");
             }
@@ -154,7 +157,6 @@ mod tests {
         }
         if let Err(e) = h.add_device("No such room", "Device") {
             if let HouseError::NoRoomName = e {
-                assert!(true);
             } else {
                 panic!("Error should be NoRoomName");
             }

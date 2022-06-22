@@ -15,7 +15,12 @@ pub struct Thermometer {
 
 impl ReportState for Socket {
     fn report_state(&self) -> String {
-        format!("Socket [V = {}, I = {}] is {}", self.voltage, self.current, if self.on {"On"} else {"Off"})
+        format!(
+            "Socket [V = {}, I = {}] is {}",
+            self.voltage,
+            self.current,
+            if self.on { "On" } else { "Off" }
+        )
     }
 }
 
