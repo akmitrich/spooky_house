@@ -72,12 +72,19 @@ impl House {
     }
 
     pub fn generate_report(&self, info_provider: &impl GetDevice) -> String {
+        let mut lines = vec![];
+        lines.push(String::from("General report on House:"));
         for room in self.get_room_name_list() {
+            lines.push(format!("\t Room: {}", room));
             for device in self.get_device_list_in_room(room).unwrap() {
-                println!("{}-{} -> {}", room, device, info_provider.get_device(room, device).unwrap().report_state());
+                match info_provider.get_device(room, device) {
+                    Some(report_state) => 
+                        lines.push(format!("\t\t {} => {}", device, report_state.report_state())),
+                    None => lines.push(format!("Error! Cannot find info about {}-{}", room, device)),
+                }
             }
         }
-        "".into()
+        lines.join("\n")
     }
 }
 

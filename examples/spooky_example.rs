@@ -1,4 +1,3 @@
-use spooky_house::house::ReportState;
 use spooky_house::spooky;
 use spooky_house::house;
 use spooky_house::devices;
@@ -14,7 +13,7 @@ fn main() {
     spooky.add_thermometer("R1", "Thermo", devices::Thermometer::new(23.3));
     house.add_device("Kitchen", "Thermo").unwrap();
     spooky.add_thermometer("Kitchen", "Thermo", devices::Thermometer::new(120_f64));
+    house.add_device("Kitchen", "Thermo outside").unwrap();
     println!("{:?}", spooky);
-    println!("Report:");
     println!("{}", house.generate_report(&spooky));
 }
